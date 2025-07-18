@@ -4,6 +4,10 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Infinite Pruning</title>
+
+  <!-- Ícone da aba (favicon) -->
+  <link rel="icon" type="image/png" href="logo.png" />
+
   <style>
     :root {
       --bg-light: linear-gradient(to bottom, #8ed2ff, #ffffff);
@@ -137,6 +141,47 @@
       margin-bottom: 1rem;
     }
 
+    .jogar-agora {
+      background: #4cc9f0;
+      color: white;
+      text-align: center;
+      padding: 2rem 1rem;
+      font-size: 1.2rem;
+    }
+
+    .jogar-agora a {
+      display: inline-block;
+      background-color: #fff;
+      color: #4cc9f0;
+      text-decoration: none;
+      font-weight: bold;
+      padding: 0.8rem 1.5rem;
+      border-radius: 10px;
+      box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+      transition: background 0.3s, color 0.3s;
+      margin-top: 1rem;
+    }
+
+    .jogar-agora a:hover {
+      background-color: #222;
+      color: #fff;
+    }
+
+    body.dark-mode .jogar-agora {
+      background-color: #1a1a1a;
+      color: #eee;
+    }
+
+    body.dark-mode .jogar-agora a {
+      background-color: #eee;
+      color: #1a1a1a;
+    }
+
+    body.dark-mode .jogar-agora a:hover {
+      background-color: #4cc9f0;
+      color: #fff;
+    }
+
     section {
       padding: 2rem;
       max-width: 1000px;
@@ -183,7 +228,6 @@
       color: #ccc;
     }
 
-    /* Responsivo */
     @media (max-width: 768px) {
       header {
         flex-direction: column;
@@ -266,6 +310,12 @@
     </nav>
     <button class="toggle-theme" onclick="toggleTheme()">🌙/☀️</button>
   </header>
+
+  <section class="jogar-agora">
+    <h2>🎮 Jogue Agora Infinite Pruning!</h2>
+    <p>Clique no botão abaixo para jogar gratuitamente no Itch.io.</p>
+    <a href="https://devdragonindie.itch.io/infinite-pruning" target="_blank">Jogar no Itch.io</a>
+  </section>
 
   <section class="hero">
     <h2>Bem-vindo ao mundo de Infinite Pruning!</h2>
