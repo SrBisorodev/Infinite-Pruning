@@ -1,0 +1,317 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Infinite Pruning</title>
+  <style>
+    :root {
+      --bg-light: linear-gradient(to bottom, #8ed2ff, #ffffff);
+      --bg-dark: linear-gradient(to bottom, #1a1a1a, #2c2c2c);
+      --text-light: #333;
+      --text-dark: #eee;
+      --header-light: #4cc9f0;
+      --header-dark: #222;
+      --link-light: white;
+      --link-dark: #ddd;
+      --hover-light: #222;
+      --hover-dark: #4cc9f0;
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      transition: background 0.6s ease, color 0.6s ease;
+    }
+
+    body {
+      font-family: 'Segoe UI', sans-serif;
+      background: var(--bg-light);
+      color: var(--text-light);
+      line-height: 1.6;
+    }
+
+    body.dark-mode {
+      background: var(--bg-dark);
+      color: var(--text-dark);
+    }
+
+    header {
+      background-color: var(--header-light);
+      padding: 1rem 2rem;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+      position: sticky;
+      top: 0;
+      z-index: 998;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+    }
+
+    body.dark-mode header {
+      background-color: var(--header-dark);
+    }
+
+    .logo-container {
+      display: flex;
+      justify-content: flex-start;
+      align-items: center;
+      flex: 1;
+    }
+
+    .logo {
+      width: 300px;
+      max-width: 80vw;
+      transition: all 0.5s ease;
+    }
+
+    .logo-mini {
+      position: fixed;
+      width: 120px;
+      top: 12px;
+      left: 20px;
+      z-index: 999;
+    }
+
+    nav {
+      flex: 2;
+      display: flex;
+      justify-content: center;
+    }
+
+    nav ul {
+      list-style: none;
+      display: flex;
+      gap: 1.5rem;
+      flex-wrap: wrap;
+    }
+
+    nav a {
+      text-decoration: none;
+      color: var(--link-light);
+      font-weight: bold;
+      font-size: 1.2rem;
+      transition: color 0.3s;
+    }
+
+    nav a:hover {
+      color: var(--hover-light);
+    }
+
+    body.dark-mode nav a {
+      color: var(--link-dark);
+    }
+
+    body.dark-mode nav a:hover {
+      color: var(--hover-dark);
+    }
+
+    .toggle-theme {
+      background: none;
+      border: 2px solid white;
+      border-radius: 20px;
+      padding: 0.3rem 1rem;
+      font-size: 0.9rem;
+      cursor: pointer;
+      color: white;
+      transition: all 0.3s ease;
+    }
+
+    body.dark-mode .toggle-theme {
+      border-color: #ccc;
+      color: #ccc;
+    }
+
+    .hero {
+      background: url('bg-hero.jpg') center/cover no-repeat;
+      text-align: center;
+      padding: 6rem 2rem;
+      color: #fff;
+      text-shadow: 2px 2px 4px rgba(0,0,0,0.5);
+    }
+
+    .hero h2 {
+      font-size: 2.2rem;
+      margin-bottom: 1rem;
+    }
+
+    section {
+      padding: 2rem;
+      max-width: 1000px;
+      margin: auto;
+    }
+
+    section h2 {
+      font-size: 2rem;
+      margin-bottom: 1rem;
+      border-bottom: 3px solid #4cc9f0;
+      display: inline-block;
+      padding-bottom: 5px;
+    }
+
+    .galeria {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 1rem;
+      justify-content: center;
+      margin-top: 1rem;
+    }
+
+    .galeria img {
+      width: 300px;
+      border-radius: 12px;
+      box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+      transition: transform 0.3s ease;
+    }
+
+    .galeria img:hover {
+      transform: scale(1.05);
+    }
+
+    footer {
+      background-color: var(--header-light);
+      color: white;
+      text-align: center;
+      padding: 1rem;
+      margin-top: 2rem;
+    }
+
+    body.dark-mode footer {
+      background-color: var(--header-dark);
+      color: #ccc;
+    }
+
+    /* Responsivo */
+    @media (max-width: 768px) {
+      header {
+        flex-direction: column;
+        align-items: flex-start;
+      }
+
+      .logo-container {
+        width: 100%;
+        justify-content: flex-end;
+        margin-bottom: 1rem;
+      }
+
+      .logo {
+        width: 180px;
+        max-width: 60vw;
+      }
+
+      nav {
+        width: 100%;
+        margin-bottom: 0.5rem;
+      }
+
+      nav ul {
+        flex-direction: column;
+        gap: 0.8rem;
+        padding-left: 1rem;
+        align-items: flex-start;
+      }
+
+      .toggle-theme {
+        align-self: flex-end;
+        margin: 0 1rem 1rem 0;
+      }
+
+      .galeria img {
+        width: 90%;
+        max-width: 300px;
+      }
+
+      section {
+        padding: 1rem;
+      }
+    }
+  </style>
+
+  <script>
+    window.addEventListener('scroll', () => {
+      const logo = document.querySelector('.logo');
+      if (window.scrollY > 150) {
+        logo.classList.add('logo-mini');
+      } else {
+        logo.classList.remove('logo-mini');
+      }
+    });
+
+    function toggleTheme() {
+      document.body.classList.toggle('dark-mode');
+      localStorage.setItem('theme', document.body.classList.contains('dark-mode') ? 'dark' : 'light');
+    }
+
+    window.addEventListener('DOMContentLoaded', () => {
+      const savedTheme = localStorage.getItem('theme');
+      if (savedTheme === 'dark') {
+        document.body.classList.add('dark-mode');
+      }
+    });
+  </script>
+</head>
+<body>
+  <header>
+    <div class="logo-container">
+      <img src="logo.png" alt="Logo Infinite Pruning" class="logo" />
+    </div>
+    <nav>
+      <ul>
+        <li><a href="#sobre">Sobre</a></li>
+        <li><a href="#imagens">Imagens</a></li>
+        <li><a href="#contato">Contato</a></li>
+      </ul>
+    </nav>
+    <button class="toggle-theme" onclick="toggleTheme()">🌙/☀️</button>
+  </header>
+
+  <section class="hero">
+    <h2>Bem-vindo ao mundo de Infinite Pruning!</h2>
+    <p>Um jogo de corte de galhos em um mundo infinito cheio de desafios..</p>
+  </section>
+
+  <section id="sobre">
+    <h2>Sobre o Jogo</h2>
+    <p>Infinite Pruning é um jogo casual e viciante onde você assume o controle de uma pequena serra automática (ou algo muito parecido com isso!) com uma missão simples, mas desafiadora: cortar o máximo de galhos possível antes que o tempo acabe ou você cometa um erro.
+
+Conforme você vai podando os galhos de uma árvore infinita, acumula pontos a cada corte bem-sucedido. Esses pontos podem ser convertidos em moedas, que permitem desbloquear novas skins, cada uma com seu próprio estilo visual — e, em alguns casos, com vantagens que tornam sua serra ainda mais rápida e eficiente.
+
+O ritmo do jogo vai se intensificando à medida que você avança, exigindo reflexos rápidos, precisão e estratégia para alcançar pontuações cada vez mais altas. Com controles simples e jogabilidade fluida, Infinite Pruning é perfeito tanto para partidas rápidas quanto para sessões mais longas de pura diversão.
+
+Desbloqueie visuais únicos
+
+Aumente sua velocidade de corte
+
+Supere seus recordes
+
+Curta trilha sonora e visual minimalista envolvente
+
+Jogue agora gratuitamente no Itch.io e não se esqueça de deixar seu comentário. Sua opinião é muito importante para o desenvolvimento contínuo do jogo.
+
+Está pronto para podar infinitamente? Então comece já sua jornada em Infinite Pruning!</p>
+  </section>
+
+  <section id="imagens">
+    <h2>Imagens do Jogo</h2>
+    <h1>(Imagens oficiais tiradas durante o desenvolvimento do jogo)</h1>
+    <h1>(Nós mudamos as imagens durante as atualizações)</h1>
+    <div class="galeria">
+      <img src="foto1.png" alt="Gameplay 1" />
+      <img src="foto2.png" alt="Gameplay 2" />
+      <img src="foto3.png" alt="Gameplay 3" />
+    </div>
+  </section>
+
+  <section id="contato">
+    <h2>Contato</h2>
+    <p>Entre em contato para suporte para relatar bugs em nossa página na Itch.io!</p>
+    <p>Seu feedback é muito importante para nós!</p>
+  </section>
+
+  <footer>
+    <p>&copy; 2025 Infinite Pruning. Todos os direitos reservados.</p>
+  </footer>
+</body>
+</html>
